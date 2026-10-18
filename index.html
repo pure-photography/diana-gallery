@@ -122,7 +122,10 @@
   <p>Pure Photography — true to color</p>
 </header>
 <main id="main">
+  <div id="client-gate"></div>
+  <div id="gallery-content" hidden>
   <p class="intro">Hello! Pick the photos you love below, choose your sizes and quantities, and hit <strong>Send my order</strong>. Your prints will be made with care and shipped right to your door.</p>
+  <p class="intro">Looking for <strong>holiday cards</strong>? <a href="https://pure-photography.github.io/card-builder/">Design your holiday cards here</a> — pick from every photo in all of your sessions.</p>
 
   <section aria-labelledby="gallery-heading">
     <h2 id="gallery-heading" style="text-align:center; margin-bottom:1.5rem;">Your Photos</h2>
@@ -159,6 +162,15 @@
             </span>
             <input type="hidden" id="p1-11x14" value="0">
           </div>
+          <div class="size-row">
+            <span><label for="p1-stickers">Stickers <span class="fine">(80 per photo)</span></label> <span class="price">$60</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p1-stickers" data-action="dec" aria-label="Decrease sticker sets for Photo 1">−</button>
+              <output id="p1-stickers-out" aria-live="polite">0</output>
+              <button type="button" data-target="p1-stickers" data-action="inc" aria-label="Increase sticker sets for Photo 1">+</button>
+            </span>
+            <input type="hidden" id="p1-stickers" value="0">
+          </div>
         </div>
       </article>
 
@@ -193,6 +205,15 @@
             </span>
             <input type="hidden" id="p2-11x14" value="0">
           </div>
+          <div class="size-row">
+            <span><label for="p2-stickers">Stickers <span class="fine">(80 per photo)</span></label> <span class="price">$60</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p2-stickers" data-action="dec" aria-label="Decrease sticker sets for Photo 2">−</button>
+              <output id="p2-stickers-out" aria-live="polite">0</output>
+              <button type="button" data-target="p2-stickers" data-action="inc" aria-label="Increase sticker sets for Photo 2">+</button>
+            </span>
+            <input type="hidden" id="p2-stickers" value="0">
+          </div>
         </div>
       </article>
 
@@ -205,7 +226,7 @@
     <p id="order-total">Total: $0</p>
   </div>
 
-  <form id="order-form" novalidate>
+  <form id="order-form" novalidate data-require-client>
     <fieldset>
       <legend>Your Details</legend>
       <div class="form-group">
@@ -244,6 +265,8 @@
     <button type="submit" id="send-order">Send my order</button>
   </form>
 
+  </div><!-- /#gallery-content -->
+
   <div id="confirmation" role="status" aria-live="polite" tabindex="-1">
     <h2>Thank you!</h2>
     <p>Your order has been sent. Mary will be in touch soon with payment details and your tracking information.</p>
@@ -257,16 +280,16 @@
 
 <script>
 (function() {
-  var PRICES = { '5x7': 20, '8x10': 30, '11x14': 50 };
+  var PRICES = { '5x7': 20, '8x10': 30, '11x14': 50, 'stickers': 60 };
   var PHOTOS = {
     'p1': { title: 'Photo 1 — The Kiss' },
     'p2': { title: 'Photo 2 — Together' }
   };
   var quantities = {};
-  ['p1-5x7','p1-8x10','p1-11x14','p2-5x7','p2-8x10','p2-11x14'].forEach(function(id){ quantities[id] = 0; });
+  ['p1-5x7','p1-8x10','p1-11x14','p1-stickers','p2-5x7','p2-8x10','p2-11x14','p2-stickers'].forEach(function(id){ quantities[id] = 0; });
 
   function sizeLabel(key) {
-    return { '5x7': '5×7', '8x10': '8×10', '11x14': '11×14' }[key];
+    return { '5x7': '5×7', '8x10': '8×10', '11x14': '11×14', 'stickers': 'Sticker set (80)' }[key];
   }
 
   document.querySelectorAll('.qty-controls button').forEach(function(btn) {
@@ -361,6 +384,16 @@
     conf.scrollIntoView({ behavior: 'smooth' });
   });
 })();
+</script>
+<script src="https://pure-photography.github.io/js/order-form-verify.js"></script>
+<script>
+  // Client verification gate: only registered clients can view/order.
+  // No session = no purchase, no exceptions (prints, stickers, cards).
+  PurePhotoVerify.install({
+    gateId: 'client-gate',
+    contentId: 'gallery-content',
+    hashesUrl: 'https://pure-photography.github.io/client-hashes.json'
+  });
 </script>
 </body>
 </html>
