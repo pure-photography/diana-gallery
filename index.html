@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Print Order — Pure Photography</title>
+<meta name="description" content="Order prints of your beautiful photos from Pure Photography.">
+<style>
+  :root {
+    --pink: #e91e63;
+    --dark: #1a1a2e;
+    --light: #fdf6f0;
+    --accent: #ff6b9d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+    padding: 0;
+  }
+  header {
+    background: var(--dark);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  header p { color: var(--accent); font-size: 1.1rem; }
+  main { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+  .intro { text-align: center; margin-bottom: 2rem; font-size: 1.1rem; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+  .photo-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  .photo-card img { width: 100%; height: auto; display: block; }
+  .photo-card .details { padding: 1.25rem; }
+  .photo-card h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+  .size-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-top: 1px solid #eee;
+  }
+  .size-row label { font-weight: bold; }
+  .size-row .price { color: var(--pink); font-weight: bold; margin-left: 0.5rem; }
+  .qty-controls { display: flex; align-items: center; gap: 0.5rem; }
+  .qty-controls button {
+    width: 2.2rem; height: 2.2rem;
+    border: 2px solid var(--pink);
+    background: white; color: var(--pink);
+    border-radius: 50%; font-size: 1.2rem;
+    cursor: pointer; line-height: 1;
+  }
+  .qty-controls button:hover, .qty-controls button:focus {
+    background: var(--pink); color: white;
+    outline: 3px solid var(--accent); outline-offset: 2px;
+  }
+  .qty-controls output { min-width: 2rem; text-align: center; font-size: 1.1rem; font-weight: bold; }
+  fieldset {
+    border: 2px solid var(--pink);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    background: white;
+  }
+  legend { font-size: 1.3rem; font-weight: bold; padding: 0 0.5rem; color: var(--pink); }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-weight: bold; margin-bottom: 0.4rem; }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 0.8rem;
+    border: 2px solid #ddd; border-radius: 8px;
+    font-size: 1rem; font-family: inherit;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--pink); outline: 3px solid var(--accent); outline-offset: 1px;
+  }
+  .form-group textarea { min-height: 5rem; resize: vertical; }
+  .required { color: var(--pink); }
+  #order-summary {
+    background: white; border: 2px solid var(--pink);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;
+  }
+  #order-summary h2 { color: var(--pink); margin-bottom: 1rem; }
+  #order-summary ul { list-style: none; }
+  #order-summary li { padding: 0.4rem 0; border-bottom: 1px solid #eee; }
+  #order-total { font-size: 1.4rem; font-weight: bold; margin-top: 1rem; text-align: right; }
+  #send-order {
+    display: block; width: 100%;
+    background: var(--pink); color: white;
+    border: none; border-radius: 12px;
+    padding: 1.2rem; font-size: 1.3rem; font-weight: bold;
+    cursor: pointer; font-family: inherit;
+  }
+  #send-order:hover, #send-order:focus {
+    background: #c2185b; outline: 3px solid var(--accent); outline-offset: 2px;
+  }
+  #send-order:disabled { background: #ccc; cursor: not-allowed; }
+  #confirmation {
+    display: none; text-align: center;
+    background: white; border: 2px solid var(--pink);
+    border-radius: 12px; padding: 3rem 2rem; margin: 2rem 0;
+  }
+  #confirmation h2 { color: var(--pink); font-size: 1.8rem; margin-bottom: 1rem; }
+  footer { text-align: center; padding: 2rem 1rem; color: #666; font-size: 0.9rem; }
+  .skip-link {
+    position: absolute; left: -9999px; top: auto;
+    width: 1px; height: 1px; overflow: hidden;
+  }
+  .skip-link:focus { position: static; width: auto; height: auto; padding: 1rem; background: var(--pink); color: white; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header>
+  <h1>Your Print Order</h1>
+  <p>Pure Photography — true to color</p>
+</header>
+<main id="main">
+  <p class="intro">Hello! Pick the photos you love below, choose your sizes and quantities, and hit <strong>Send my order</strong>. Your prints will be made with care and shipped right to your door.</p>
+
+  <section aria-labelledby="gallery-heading">
+    <h2 id="gallery-heading" style="text-align:center; margin-bottom:1.5rem;">Your Photos</h2>
+    <div class="gallery">
+
+      <article class="photo-card" aria-labelledby="photo1-title">
+        <img src="img/couple-01.jpg" alt="A woman with long gray hair kissing a bald man with glasses on the cheek outdoors, with a white fence and green trees behind them">
+        <div class="details">
+          <h2 id="photo1-title">Photo 1 — The Kiss</h2>
+          <div class="size-row">
+            <span><label for="p1-5x7">5&times;7</label> <span class="price">$20</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p1-5x7" data-action="dec" aria-label="Decrease 5 by 7 quantity for Photo 1">−</button>
+              <output id="p1-5x7-out" aria-live="polite">0</output>
+              <button type="button" data-target="p1-5x7" data-action="inc" aria-label="Increase 5 by 7 quantity for Photo 1">+</button>
+            </span>
+            <input type="hidden" id="p1-5x7" value="0">
+          </div>
+          <div class="size-row">
+            <span><label for="p1-8x10">8&times;10</label> <span class="price">$30</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p1-8x10" data-action="dec" aria-label="Decrease 8 by 10 quantity for Photo 1">−</button>
+              <output id="p1-8x10-out" aria-live="polite">0</output>
+              <button type="button" data-target="p1-8x10" data-action="inc" aria-label="Increase 8 by 10 quantity for Photo 1">+</button>
+            </span>
+            <input type="hidden" id="p1-8x10" value="0">
+          </div>
+          <div class="size-row">
+            <span><label for="p1-11x14">11&times;14</label> <span class="price">$50</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p1-11x14" data-action="dec" aria-label="Decrease 11 by 14 quantity for Photo 1">−</button>
+              <output id="p1-11x14-out" aria-live="polite">0</output>
+              <button type="button" data-target="p1-11x14" data-action="inc" aria-label="Increase 11 by 14 quantity for Photo 1">+</button>
+            </span>
+            <input type="hidden" id="p1-11x14" value="0">
+          </div>
+        </div>
+      </article>
+
+      <article class="photo-card" aria-labelledby="photo2-title">
+        <img src="img/couple-02.jpg" alt="A smiling couple standing together outdoors — a woman with long gray hair and a bald man with glasses in a blue shirt, with green trees and a white fence behind them">
+        <div class="details">
+          <h2 id="photo2-title">Photo 2 — Together</h2>
+          <div class="size-row">
+            <span><label for="p2-5x7">5&times;7</label> <span class="price">$20</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p2-5x7" data-action="dec" aria-label="Decrease 5 by 7 quantity for Photo 2">−</button>
+              <output id="p2-5x7-out" aria-live="polite">0</output>
+              <button type="button" data-target="p2-5x7" data-action="inc" aria-label="Increase 5 by 7 quantity for Photo 2">+</button>
+            </span>
+            <input type="hidden" id="p2-5x7" value="0">
+          </div>
+          <div class="size-row">
+            <span><label for="p2-8x10">8&times;10</label> <span class="price">$30</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p2-8x10" data-action="dec" aria-label="Decrease 8 by 10 quantity for Photo 2">−</button>
+              <output id="p2-8x10-out" aria-live="polite">0</output>
+              <button type="button" data-target="p2-8x10" data-action="inc" aria-label="Increase 8 by 10 quantity for Photo 2">+</button>
+            </span>
+            <input type="hidden" id="p2-8x10" value="0">
+          </div>
+          <div class="size-row">
+            <span><label for="p2-11x14">11&times;14</label> <span class="price">$50</span></span>
+            <span class="qty-controls">
+              <button type="button" data-target="p2-11x14" data-action="dec" aria-label="Decrease 11 by 14 quantity for Photo 2">−</button>
+              <output id="p2-11x14-out" aria-live="polite">0</output>
+              <button type="button" data-target="p2-11x14" data-action="inc" aria-label="Increase 11 by 14 quantity for Photo 2">+</button>
+            </span>
+            <input type="hidden" id="p2-11x14" value="0">
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div id="order-summary" aria-live="polite">
+    <h2>Order Summary</h2>
+    <ul id="summary-list"><li>No prints selected yet.</li></ul>
+    <p id="order-total">Total: $0</p>
+  </div>
+
+  <form id="order-form" novalidate>
+    <fieldset>
+      <legend>Your Details</legend>
+      <div class="form-group">
+        <label for="client-name">Full name <span class="required" aria-hidden="true">*</span></label>
+        <input type="text" id="client-name" name="name" autocomplete="name" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="client-email">Email <span class="required" aria-hidden="true">*</span></label>
+        <input type="email" id="client-email" name="email" autocomplete="email" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="client-phone">Phone (optional)</label>
+        <input type="tel" id="client-phone" name="phone" autocomplete="tel">
+      </div>
+      <div class="form-group">
+        <label for="client-address">Street address <span class="required" aria-hidden="true">*</span></label>
+        <input type="text" id="client-address" name="street" autocomplete="street-address" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="client-city">City <span class="required" aria-hidden="true">*</span></label>
+        <input type="text" id="client-city" name="city" autocomplete="address-level2" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="client-state">State <span class="required" aria-hidden="true">*</span></label>
+        <input type="text" id="client-state" name="state" autocomplete="address-level1" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label for="client-zip">ZIP code <span class="required" aria-hidden="true">*</span></label>
+        <input type="text" id="client-zip" name="zip" autocomplete="postal-code" required aria-required="true" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label for="delivery-instructions">Delivery instructions (optional)</label>
+        <textarea id="delivery-instructions" name="delivery-instructions" autocomplete="off" placeholder="e.g. Leave at the side door, ring the bell twice…"></textarea>
+      </div>
+    </fieldset>
+    <button type="submit" id="send-order">Send my order</button>
+  </form>
+
+  <div id="confirmation" role="status" aria-live="polite" tabindex="-1">
+    <h2>Thank you!</h2>
+    <p>Your order has been sent. Mary will be in touch soon with payment details and your tracking information.</p>
+    <p id="confirmation-summary"></p>
+  </div>
+</main>
+<footer>
+  <p>Pure Photography — true to color · York, South Carolina</p>
+  <p><a href="https://pure-photography.github.io">pure-photography.github.io</a></p>
+</footer>
+
+<script>
+(function() {
+  var PRICES = { '5x7': 20, '8x10': 30, '11x14': 50 };
+  var PHOTOS = {
+    'p1': { title: 'Photo 1 — The Kiss' },
+    'p2': { title: 'Photo 2 — Together' }
+  };
+  var quantities = {};
+  ['p1-5x7','p1-8x10','p1-11x14','p2-5x7','p2-8x10','p2-11x14'].forEach(function(id){ quantities[id] = 0; });
+
+  function sizeLabel(key) {
+    return { '5x7': '5×7', '8x10': '8×10', '11x14': '11×14' }[key];
+  }
+
+  document.querySelectorAll('.qty-controls button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = btn.getAttribute('data-target');
+      var action = btn.getAttribute('data-action');
+      if (action === 'inc') quantities[target]++;
+      else quantities[target] = Math.max(0, quantities[target] - 1);
+      document.getElementById(target).value = quantities[target];
+      document.getElementById(target + '-out').textContent = quantities[target];
+      updateSummary();
+    });
+  });
+
+  function getOrderLines() {
+    var lines = [];
+    Object.keys(quantities).forEach(function(id) {
+      var qty = quantities[id];
+      if (qty > 0) {
+        var parts = id.split('-');
+        var photoId = parts[0], sizeKey = parts.slice(1).join('-');
+        lines.push({
+          photo: PHOTOS[photoId].title,
+          size: sizeLabel(sizeKey),
+          qty: qty,
+          price: PRICES[sizeKey],
+          subtotal: qty * PRICES[sizeKey]
+        });
+      }
+    });
+    return lines;
+  }
+
+  function updateSummary() {
+    var lines = getOrderLines();
+    var list = document.getElementById('summary-list');
+    var totalEl = document.getElementById('order-total');
+    if (lines.length === 0) {
+      list.innerHTML = '<li>No prints selected yet.</li>';
+      totalEl.textContent = 'Total: $0';
+      return;
+    }
+    var html = '';
+    var total = 0;
+    lines.forEach(function(l) {
+      html += '<li>' + l.photo + ' — ' + l.size + ' × ' + l.qty + ' = $' + l.subtotal + '</li>';
+      total += l.subtotal;
+    });
+    list.innerHTML = html;
+    totalEl.textContent = 'Total: $' + total;
+  }
+
+  document.getElementById('order-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var lines = getOrderLines();
+    if (lines.length === 0) {
+      alert('Please pick at least one print before sending your order.');
+      return;
+    }
+    var name = document.getElementById('client-name').value.trim();
+    var email = document.getElementById('client-email').value.trim();
+    var address = document.getElementById('client-address').value.trim();
+    var city = document.getElementById('client-city').value.trim();
+    var state = document.getElementById('client-state').value.trim();
+    var zip = document.getElementById('client-zip').value.trim();
+    if (!name || !email || !address || !city || !state || !zip) {
+      alert('Please fill in your name, email, and shipping address.');
+      return;
+    }
+    var phone = document.getElementById('client-phone').value.trim();
+    var instructions = document.getElementById('delivery-instructions').value.trim();
+    var total = 0;
+    var body = 'New print order from the Diana Evans gallery page\n\n';
+    body += 'Name: ' + name + '\nEmail: ' + email + '\n';
+    if (phone) body += 'Phone: ' + phone + '\n';
+    body += 'Address: ' + address + ', ' + city + ', ' + state + ' ' + zip + '\n';
+    if (instructions) body += 'Delivery instructions: ' + instructions + '\n';
+    body += '\n--- ORDER ---\n';
+    lines.forEach(function(l) {
+      body += l.photo + ' — ' + l.size + ' × ' + l.qty + ' = $' + l.subtotal + '\n';
+      total += l.subtotal;
+    });
+    body += '\nTOTAL: $' + total;
+
+    var subject = encodeURIComponent('Print order from ' + name);
+    window.location.href = 'mailto:purephotography6@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(body);
+
+    var conf = document.getElementById('confirmation');
+    document.getElementById('confirmation-summary').textContent = 'Order total: $' + total + ' (' + lines.length + ' line item' + (lines.length > 1 ? 's' : '') + ').';
+    conf.style.display = 'block';
+    conf.focus();
+    conf.scrollIntoView({ behavior: 'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
