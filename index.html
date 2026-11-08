@@ -62,6 +62,15 @@
     outline: 3px solid var(--accent); outline-offset: 2px;
   }
   .qty-controls output { min-width: 2rem; text-align: center; font-size: 1.1rem; font-weight: bold; }
+  .qty-controls button:disabled { border-color: #ccc; color: #999; cursor: not-allowed; background: #f5f5f5; }
+  .frame-choice { display: block; font-size: 0.85rem; margin-top: 0.25rem; }
+  .frame-choice label { font-weight: normal; margin-right: 0.75rem; cursor: pointer; }
+  .frame-choice input { width: auto; accent-color: var(--pink); }
+  #all-photos-box .fine { color: #666; font-size: 0.95rem; margin-bottom: 1rem; }
+  #all-photos-box input[type="checkbox"], #all-photos-box input[type="radio"] { width: auto; accent-color: var(--pink); }
+  .all-size-row { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; align-items: center; margin-bottom: 0.75rem; }
+  .all-size-row label { font-weight: normal; cursor: pointer; }
+  .all-size-row input:disabled + span, .all-size-row label:has(input:disabled) { color: #999; }
   fieldset {
     border: 2px solid var(--pink);
     border-radius: 12px;
@@ -124,8 +133,32 @@
 <main id="main">
   <div id="client-gate"></div>
   <div id="gallery-content" hidden>
-  <p class="intro">Hello! Pick the photos you love below, choose your sizes and quantities, and hit <strong>Send my order</strong>. Your prints will be made with care and shipped right to your door.</p>
+  <p class="intro">Hello! Pick the photos you love below, choose your sizes and quantities, and hit <strong>Send my order</strong>. Want every photo? Tick <strong>I want all my photos</strong> and it orders them all at once. Your prints will be made with care and shipped right to your door.</p>
   <p class="intro">Looking for <strong>holiday cards</strong>? <a href="https://pure-photography.github.io/card-builder/">Design your holiday cards here</a> — pick from every photo in all of your sessions.</p>
+
+  <fieldset id="all-photos-box">
+    <legend>Want every photo?</legend>
+    <div class="form-group" style="margin-bottom:0.5rem;">
+      <input type="checkbox" id="all-photos" style="width:auto;">
+      <label for="all-photos" style="display:inline;">I want all my photos</label>
+    </div>
+    <p class="fine">Pick a size and how many of each — it applies to every photo. Framed or unframed follows the choice on each photo below.</p>
+    <div class="all-size-row" role="radiogroup" aria-label="Size for all photos">
+      <span>Size:</span>
+      <label><input type="radio" name="all-size" value="5x7" checked disabled> 5&times;7 — $20</label>
+      <label><input type="radio" name="all-size" value="8x10" disabled> 8&times;10 — $30</label>
+      <label><input type="radio" name="all-size" value="11x14" disabled> 11&times;14 — $50</label>
+    </div>
+    <div class="all-size-row">
+      <span id="all-qty-label">How many of each:</span>
+      <span class="qty-controls">
+        <button type="button" data-action="dec" aria-label="Decrease quantity for all photos" disabled>−</button>
+        <output id="all-qty-out" aria-live="polite">1</output>
+        <button type="button" data-action="inc" aria-label="Increase quantity for all photos" disabled>+</button>
+      </span>
+      <input type="hidden" id="all-qty" value="1">
+    </div>
+  </fieldset>
 
   <section aria-labelledby="gallery-heading">
     <h2 id="gallery-heading" style="text-align:center; margin-bottom:1.5rem;">Your Photos</h2>
@@ -136,7 +169,12 @@
         <div class="details">
           <h2 id="photo1-title">Photo 1 — The Kiss</h2>
           <div class="size-row">
-            <span><label for="p1-5x7">5&times;7</label> <span class="price">$20</span></span>
+            <span><label for="p1-5x7">5&times;7</label> <span class="price" id="p1-5x7-price">$20</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 1, 5 by 7 print">
+                <label><input type="radio" name="p1-5x7-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p1-5x7-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p1-5x7" data-action="dec" aria-label="Decrease 5 by 7 quantity for Photo 1">−</button>
               <output id="p1-5x7-out" aria-live="polite">0</output>
@@ -145,7 +183,12 @@
             <input type="hidden" id="p1-5x7" value="0">
           </div>
           <div class="size-row">
-            <span><label for="p1-8x10">8&times;10</label> <span class="price">$30</span></span>
+            <span><label for="p1-8x10">8&times;10</label> <span class="price" id="p1-8x10-price">$30</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 1, 8 by 10 print">
+                <label><input type="radio" name="p1-8x10-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p1-8x10-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p1-8x10" data-action="dec" aria-label="Decrease 8 by 10 quantity for Photo 1">−</button>
               <output id="p1-8x10-out" aria-live="polite">0</output>
@@ -154,7 +197,12 @@
             <input type="hidden" id="p1-8x10" value="0">
           </div>
           <div class="size-row">
-            <span><label for="p1-11x14">11&times;14</label> <span class="price">$50</span></span>
+            <span><label for="p1-11x14">11&times;14</label> <span class="price" id="p1-11x14-price">$50</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 1, 11 by 14 print">
+                <label><input type="radio" name="p1-11x14-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p1-11x14-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p1-11x14" data-action="dec" aria-label="Decrease 11 by 14 quantity for Photo 1">−</button>
               <output id="p1-11x14-out" aria-live="polite">0</output>
@@ -179,7 +227,12 @@
         <div class="details">
           <h2 id="photo2-title">Photo 2 — Together</h2>
           <div class="size-row">
-            <span><label for="p2-5x7">5&times;7</label> <span class="price">$20</span></span>
+            <span><label for="p2-5x7">5&times;7</label> <span class="price" id="p2-5x7-price">$20</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 2, 5 by 7 print">
+                <label><input type="radio" name="p2-5x7-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p2-5x7-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p2-5x7" data-action="dec" aria-label="Decrease 5 by 7 quantity for Photo 2">−</button>
               <output id="p2-5x7-out" aria-live="polite">0</output>
@@ -188,7 +241,12 @@
             <input type="hidden" id="p2-5x7" value="0">
           </div>
           <div class="size-row">
-            <span><label for="p2-8x10">8&times;10</label> <span class="price">$30</span></span>
+            <span><label for="p2-8x10">8&times;10</label> <span class="price" id="p2-8x10-price">$30</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 2, 8 by 10 print">
+                <label><input type="radio" name="p2-8x10-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p2-8x10-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p2-8x10" data-action="dec" aria-label="Decrease 8 by 10 quantity for Photo 2">−</button>
               <output id="p2-8x10-out" aria-live="polite">0</output>
@@ -197,7 +255,12 @@
             <input type="hidden" id="p2-8x10" value="0">
           </div>
           <div class="size-row">
-            <span><label for="p2-11x14">11&times;14</label> <span class="price">$50</span></span>
+            <span><label for="p2-11x14">11&times;14</label> <span class="price" id="p2-11x14-price">$50</span>
+              <span class="frame-choice" role="radiogroup" aria-label="Framed or unframed for Photo 2, 11 by 14 print">
+                <label><input type="radio" name="p2-11x14-frame" value="unframed" checked> Unframed</label>
+                <label><input type="radio" name="p2-11x14-frame" value="framed"> Framed</label>
+              </span>
+            </span>
             <span class="qty-controls">
               <button type="button" data-target="p2-11x14" data-action="dec" aria-label="Decrease 11 by 14 quantity for Photo 2">−</button>
               <output id="p2-11x14-out" aria-live="polite">0</output>
@@ -281,6 +344,7 @@
 <script>
 (function() {
   var PRICES = { '5x7': 20, '8x10': 30, '11x14': 50, 'stickers': 60 };
+  var FRAMED_PRICES = { '5x7': 25, '8x10': 35, '11x14': 65 };
   var PHOTOS = {
     'p1': { title: 'Photo 1 — The Kiss' },
     'p2': { title: 'Photo 2 — Together' }
@@ -292,15 +356,109 @@
     return { '5x7': '5×7', '8x10': '8×10', '11x14': '11×14', 'stickers': 'Sticker set (80)' }[key];
   }
 
-  document.querySelectorAll('.qty-controls button').forEach(function(btn) {
+  // Framed or unframed choice for one print size (stickers are never framed).
+  function getFrame(photoId, sizeKey) {
+    var radios = document.querySelectorAll('input[name="' + photoId + '-' + sizeKey + '-frame"]');
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) return radios[i].value;
+    }
+    return 'unframed';
+  }
+
+  function updatePriceDisplay(photoId, sizeKey) {
+    var priceEl = document.getElementById(photoId + '-' + sizeKey + '-price');
+    if (!priceEl) return;
+    priceEl.textContent = '$' + (getFrame(photoId, sizeKey) === 'framed' ? FRAMED_PRICES[sizeKey] : PRICES[sizeKey]);
+  }
+
+  function setQty(id, qty) {
+    quantities[id] = Math.max(0, qty);
+    document.getElementById(id).value = quantities[id];
+    document.getElementById(id + '-out').textContent = quantities[id];
+  }
+
+  document.querySelectorAll('.qty-controls button[data-target]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var target = btn.getAttribute('data-target');
       var action = btn.getAttribute('data-action');
-      if (action === 'inc') quantities[target]++;
-      else quantities[target] = Math.max(0, quantities[target] - 1);
-      document.getElementById(target).value = quantities[target];
-      document.getElementById(target + '-out').textContent = quantities[target];
+      // A manual per-photo change overrides the "I want all my photos" shortcut.
+      var allBox = document.getElementById('all-photos');
+      if (allBox && allBox.checked) {
+        allBox.checked = false;
+        setAllOptionsEnabled(false);
+        lastApplied = null;
+      }
+      if (action === 'inc') setQty(target, quantities[target] + 1);
+      else setQty(target, quantities[target] - 1);
       updateSummary();
+    });
+  });
+
+  // Framed / unframed radios: update the shown price and the order total.
+  document.querySelectorAll('.frame-choice input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var name = radio.getAttribute('name'); // e.g. p1-5x7-frame
+      var parts = name.replace(/-frame$/, '').split('-');
+      updatePriceDisplay(parts[0], parts.slice(1).join('-'));
+      updateSummary();
+    });
+  });
+
+  // --- "I want all my photos" ---
+  var allQty = 1;
+  var lastApplied = null; // { size: '5x7', qty: 1 } — what the shortcut last set
+
+  function setAllOptionsEnabled(enabled) {
+    document.querySelectorAll('#all-photos-box input[name="all-size"], #all-photos-box .qty-controls button').forEach(function(el) {
+      el.disabled = !enabled;
+    });
+  }
+
+  function allSize() {
+    var checked = document.querySelector('input[name="all-size"]:checked');
+    return checked ? checked.value : '5x7';
+  }
+
+  function applyAllPhotos() {
+    var size = allSize();
+    if (lastApplied) {
+      setQty('p1-' + lastApplied.size, 0);
+      setQty('p2-' + lastApplied.size, 0);
+    }
+    setQty('p1-' + size, allQty);
+    setQty('p2-' + size, allQty);
+    lastApplied = { size: size, qty: allQty };
+    updateSummary();
+  }
+
+  function clearAllPhotos() {
+    if (lastApplied) {
+      setQty('p1-' + lastApplied.size, 0);
+      setQty('p2-' + lastApplied.size, 0);
+      lastApplied = null;
+    }
+    updateSummary();
+  }
+
+  document.getElementById('all-photos').addEventListener('change', function() {
+    setAllOptionsEnabled(this.checked);
+    if (this.checked) applyAllPhotos();
+    else clearAllPhotos();
+  });
+
+  document.querySelectorAll('input[name="all-size"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      if (document.getElementById('all-photos').checked) applyAllPhotos();
+    });
+  });
+
+  document.querySelectorAll('#all-photos-box .qty-controls button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (btn.getAttribute('data-action') === 'inc') allQty++;
+      else allQty = Math.max(1, allQty - 1);
+      document.getElementById('all-qty').value = allQty;
+      document.getElementById('all-qty-out').textContent = allQty;
+      if (document.getElementById('all-photos').checked) applyAllPhotos();
     });
   });
 
@@ -311,12 +469,19 @@
       if (qty > 0) {
         var parts = id.split('-');
         var photoId = parts[0], sizeKey = parts.slice(1).join('-');
+        var price = PRICES[sizeKey];
+        var label = sizeLabel(sizeKey);
+        if (sizeKey !== 'stickers') {
+          var frame = getFrame(photoId, sizeKey);
+          price = frame === 'framed' ? FRAMED_PRICES[sizeKey] : PRICES[sizeKey];
+          label += frame === 'framed' ? ' Framed' : ' Unframed';
+        }
         lines.push({
           photo: PHOTOS[photoId].title,
-          size: sizeLabel(sizeKey),
+          size: label,
           qty: qty,
-          price: PRICES[sizeKey],
-          subtotal: qty * PRICES[sizeKey]
+          price: price,
+          subtotal: qty * price
         });
       }
     });
